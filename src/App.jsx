@@ -2,21 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   Check,
-  Clover,
   CreditCard,
-  Facebook,
-  Feather,
   Heart,
   Instagram,
-  Leaf,
+  Facebook,
   Mail,
   Minus,
   Plus,
-  RefreshCw,
   Search,
   ShoppingBag,
-  Sparkles,
   Truck,
+  RefreshCw,
   User,
   X,
   Youtube,
@@ -25,10 +21,10 @@ import {
 const asset = (name) => `/assets/generated/${name}.webp`;
 
 const categories = [
-  ["Lounge", "category-lounge"],
-  ["Sets", "category-sets"],
-  ["Dresses", "category-dresses"],
-  ["Essentials", "category-essentials"],
+  ["Lounge",       "category-lounge"],
+  ["Sets",         "category-sets"],
+  ["Dresses",      "category-dresses"],
+  ["Essentials",   "category-essentials"],
   ["Couples Edit", "category-couples"],
 ];
 
@@ -39,10 +35,10 @@ const products = [
     color: "Taupe",
     price: 88,
     image: "product-half-zip",
-    swatches: ["#8b7967", "#d6c9b4", "#f2efe7"],
+    swatches: ["#BFAF9E", "#DED7CD", "#8b7967"],
     variants: [
-      { label: "Taupe", image: "product-half-zip" },
-      { label: "Oat", image: "product-half-zip-alt" },
+      { label: "Taupe",  image: "product-half-zip" },
+      { label: "Oat",   image: "product-half-zip-alt" },
       { label: "Stone", image: "product-half-zip-detail" },
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
@@ -53,11 +49,11 @@ const products = [
     color: "Olive",
     price: 78,
     image: "product-hoodie",
-    swatches: ["#7d8068", "#b9b2a0", "#4b4d3a"],
+    swatches: ["#5D614E", "#7d8068", "#4b4d3a"],
     variants: [
       { label: "Olive", image: "product-hoodie" },
-      { label: "Moss", image: "product-hoodie-alt" },
-      { label: "Sage", image: "product-hoodie-detail" },
+      { label: "Moss",  image: "product-hoodie-alt" },
+      { label: "Sage",  image: "product-hoodie-detail" },
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
@@ -67,11 +63,11 @@ const products = [
     color: "Bone",
     price: 68,
     image: "product-sweatpant",
-    swatches: ["#f0eadc", "#d9cdb8", "#9a8974"],
+    swatches: ["#EAE5D9", "#d9cdb8", "#9a8974"],
     variants: [
-      { label: "Bone", image: "product-sweatpant" },
+      { label: "Bone",  image: "product-sweatpant" },
       { label: "Cream", image: "product-sweatpant-alt" },
-      { label: "Dune", image: "product-sweatpant-detail" },
+      { label: "Dune",  image: "product-sweatpant-detail" },
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
   },
@@ -81,11 +77,11 @@ const products = [
     color: "Black",
     price: 48,
     image: "product-tank",
-    swatches: ["#15120f", "#8b7863", "#dfd3c0"],
+    swatches: ["#2A2A2A", "#8b7863", "#dfd3c0"],
     variants: [
       { label: "Black", image: "product-tank" },
       { label: "Cocoa", image: "product-tank-alt" },
-      { label: "Sand", image: "product-tank-detail" },
+      { label: "Sand",  image: "product-tank-detail" },
     ],
     sizes: ["XS", "S", "M", "L"],
   },
@@ -95,11 +91,11 @@ const products = [
     color: "Chocolate",
     price: 88,
     image: "product-jacket",
-    swatches: ["#5d4635", "#a9896c", "#e5d7c0"],
+    swatches: ["#4A352A", "#a9896c", "#e5d7c0"],
     variants: [
       { label: "Chocolate", image: "product-jacket" },
-      { label: "Truffle", image: "product-jacket-alt" },
-      { label: "Mocha", image: "product-jacket-detail" },
+      { label: "Truffle",   image: "product-jacket-alt" },
+      { label: "Mocha",     image: "product-jacket-detail" },
     ],
     sizes: ["XS", "S", "M", "L", "XL"],
   },
@@ -109,11 +105,11 @@ const products = [
     color: "Sand",
     price: 48,
     image: "product-tee",
-    swatches: ["#d8c7aa", "#f0e8d9", "#c4b294"],
+    swatches: ["#D1C6B8", "#f0e8d9", "#c4b294"],
     variants: [
-      { label: "Sand", image: "product-tee" },
+      { label: "Sand",  image: "product-tee" },
       { label: "Ivory", image: "product-tee-alt" },
-      { label: "Clay", image: "product-tee-detail" },
+      { label: "Clay",  image: "product-tee-detail" },
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
   },
@@ -124,13 +120,13 @@ const looks = [
     name: "The City Set",
     image: "look-city",
     items: ["Soft Structure Half Zip", "Wide Leg Sweatpant", "Essential Tee"],
-    price: "$156.00",
+    price: "$184.00",
   },
   {
     name: "The Airport Set",
     image: "look-airport",
     items: ["Signature Hoodie", "Wide Leg Sweatpant", "Crew Sock"],
-    price: "$146.00",
+    price: "$166.00",
   },
   {
     name: "The Weekend Set",
@@ -152,11 +148,6 @@ const social = [
   "insta-olive",
   "insta-brown",
   "insta-linen",
-  "insta-taupe",
-  "look-city",
-  "look-vacay",
-  "category-essentials",
-  "category-lounge",
 ];
 
 const money = (value) => `$${value.toFixed(2)}`;
@@ -168,57 +159,27 @@ async function sendSiteMessage(payload) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-
-    if (!response.ok) {
-      throw new Error("Message endpoint unavailable");
-    }
-
+    if (!response.ok) throw new Error("Message endpoint unavailable");
     return response.json();
-  } catch (error) {
-    const fallback = {
-      ...payload,
-      id: `local-${Date.now()}`,
-      receivedAt: new Date().toISOString(),
-    };
+  } catch {
+    const fallback = { ...payload, id: `local-${Date.now()}`, receivedAt: new Date().toISOString() };
     const saved = JSON.parse(localStorage.getItem("blaqueLotusMessages") || "[]");
     localStorage.setItem("blaqueLotusMessages", JSON.stringify([fallback, ...saved].slice(0, 20)));
     return { ok: true, local: true, message: fallback };
   }
 }
 
-function Logo({ footer = false }) {
-  return (
-    <div className={footer ? "logo logoFooter" : "logo"} aria-label="Blaque Lotus">
-      <span>BLAQUE</span>
-      <span>LOTUS</span>
-    </div>
-  );
-}
-
-function SectionHeader({ title, action, onAction }) {
-  return (
-    <div className="sectionHeader" data-reveal>
-      <h2>{title}</h2>
-      {action ? (
-        <button type="button" className="textLink" onClick={onAction}>
-          {action} <ArrowRight size={17} strokeWidth={1.5} />
-        </button>
-      ) : null}
-    </div>
-  );
-}
-
 function App() {
   const [selectedVariants, setSelectedVariants] = useState({});
-  const [wishlist, setWishlist] = useState(() => new Set());
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const [wishlist, setWishlist]   = useState(() => new Set());
+  const [cart, setCart]           = useState([]);
+  const [cartOpen, setCartOpen]   = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [quickView, setQuickView] = useState(null);
-  const [query, setQuery] = useState("");
-  const [toast, setToast] = useState("");
-  const [noteOpen, setNoteOpen] = useState(false);
-  const [sending, setSending] = useState("");
+  const [query, setQuery]         = useState("");
+  const [toast, setToast]         = useState("");
+  const [noteOpen, setNoteOpen]   = useState(false);
+  const [sending, setSending]     = useState("");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -230,9 +191,8 @@ function App() {
           }
         });
       },
-      { threshold: 0.12 },
+      { threshold: 0.1 },
     );
-
     document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, []);
@@ -244,157 +204,112 @@ function App() {
   }, [toast]);
 
   const filteredProducts = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) return products;
-    return products.filter((product) =>
-      [product.name, product.color, ...product.variants.map((variant) => variant.label)]
-        .join(" ")
-        .toLowerCase()
-        .includes(normalized),
+    const n = query.trim().toLowerCase();
+    if (!n) return products;
+    return products.filter((p) =>
+      [p.name, p.color, ...p.variants.map((v) => v.label)].join(" ").toLowerCase().includes(n),
     );
   }, [query]);
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
-  const selectVariant = (productId, index) => {
-    setSelectedVariants((current) => ({ ...current, [productId]: index }));
-  };
+  const selectVariant = (productId, index) =>
+    setSelectedVariants((c) => ({ ...c, [productId]: index }));
 
   const addToCart = (product, size = "M") => {
-    const variantIndex = selectedVariants[product.id] || 0;
-    const variant = product.variants[variantIndex];
-    const cartId = `${product.id}-${variant.label}-${size}`;
+    const idx     = selectedVariants[product.id] || 0;
+    const variant = product.variants[idx];
+    const cartId  = `${product.id}-${variant.label}-${size}`;
     setCart((items) => {
-      const existing = items.find((item) => item.cartId === cartId);
-      if (existing) {
-        return items.map((item) =>
-          item.cartId === cartId ? { ...item, quantity: item.quantity + 1 } : item,
-        );
-      }
-      return [
-        ...items,
-        {
-          cartId,
-          productId: product.id,
-          name: product.name,
-          color: variant.label,
-          image: variant.image,
-          price: product.price,
-          quantity: 1,
-          size,
-        },
-      ];
+      const existing = items.find((i) => i.cartId === cartId);
+      if (existing) return items.map((i) => i.cartId === cartId ? { ...i, quantity: i.quantity + 1 } : i);
+      return [...items, { cartId, productId: product.id, name: product.name, color: variant.label, image: variant.image, price: product.price, quantity: 1, size }];
     });
     setCartOpen(true);
     setToast(`${product.name} added to bag`);
   };
 
-  const updateCart = (cartId, quantity) => {
-    setCart((items) =>
-      quantity <= 0
-        ? items.filter((item) => item.cartId !== cartId)
-        : items.map((item) => (item.cartId === cartId ? { ...item, quantity } : item)),
-    );
-  };
+  const updateCart = (cartId, quantity) =>
+    setCart((items) => quantity <= 0 ? items.filter((i) => i.cartId !== cartId) : items.map((i) => i.cartId === cartId ? { ...i, quantity } : i));
 
-  const toggleWishlist = (id) => {
-    setWishlist((current) => {
-      const next = new Set(current);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
+  const toggleWishlist = (id) =>
+    setWishlist((cur) => { const n = new Set(cur); n.has(id) ? n.delete(id) : n.add(id); return n; });
 
-  const scrollToSection = (selector) => {
+  const scrollTo = (selector) =>
     document.querySelector(selector)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
-  const handleNewsletter = async (event) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
+  const handleNewsletter = async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
     setSending("newsletter");
-    await sendSiteMessage({
-      type: "newsletter",
-      email: form.get("email"),
-      source: "footer-newsletter",
-    });
-    event.currentTarget.reset();
+    await sendSiteMessage({ type: "newsletter", email: form.get("email"), source: "footer-newsletter" });
+    e.currentTarget.reset();
     setSending("");
     setToast("You are on the list");
   };
 
-  const handleConcierge = async (event) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
+  const handleConcierge = async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
     setSending("concierge");
-    await sendSiteMessage({
-      type: "concierge",
-      name: form.get("name"),
-      email: form.get("contactEmail"),
-      message: form.get("message"),
-      cart: cart.map(({ name, color, size, quantity }) => ({ name, color, size, quantity })),
-    });
-    event.currentTarget.reset();
+    await sendSiteMessage({ type: "concierge", name: form.get("name"), email: form.get("contactEmail"), message: form.get("message"), cart: cart.map(({ name, color, size, quantity }) => ({ name, color, size, quantity })) });
+    e.currentTarget.reset();
     setSending("");
     setToast("Message sent to Blaque Lotus");
   };
 
   const handleCheckoutMessage = async () => {
     setSending("checkout");
-    await sendSiteMessage({
-      type: "checkout-intent",
-      message: "Customer started checkout from storefront cart.",
-      cart,
-      total: cartTotal,
-    });
+    await sendSiteMessage({ type: "checkout-intent", message: "Customer started checkout from storefront cart.", cart, total: cartTotal });
     setSending("");
     setToast("Checkout note sent");
   };
 
   return (
     <div className="siteShell">
-      <header>
-        <div className="announcement">
-          <div>
-            <Truck size={14} strokeWidth={1.6} />
-            Free U.S. shipping on orders $150+
-          </div>
-          <button type="button" className="announcementCenter" onClick={() => scrollToSection(".productsSection")}>
-            New drop live <span>|</span> Shop now
-          </button>
-          <div>
-            <RefreshCw size={13} strokeWidth={1.7} />
-            Easy returns & exchanges
-          </div>
-        </div>
+      <div className="canvasGrain" aria-hidden="true" />
 
+      {/* Announcement bar */}
+      <div className="announcement">
+        <div>
+          <Truck size={13} strokeWidth={1.6} />
+          FREE U.S. SHIPPING ON ORDERS $150+
+        </div>
+        <button className="announcementCenter" type="button" onClick={() => scrollTo(".productsSection")}>
+          NEW DROP LIVE <span>|</span> <a>SHOP NOW</a>
+        </button>
+        <div>
+          <RefreshCw size={13} strokeWidth={1.7} />
+          EASY RETURNS
+        </div>
+      </div>
+
+      {/* Floating header */}
+      <header>
         <nav className="nav" aria-label="Main navigation">
           <div className="navGroup navLeft">
             <button className="iconButton" aria-label="Search" onClick={() => setSearchOpen(true)}>
-              <Search size={22} strokeWidth={1.4} />
+              <Search size={20} strokeWidth={1.5} />
             </button>
-            <button type="button" onClick={() => scrollToSection(".productsSection")}>New In</button>
-            <button type="button" onClick={() => scrollToSection(".categoryGrid")}>Women</button>
-            <button type="button" onClick={() => scrollToSection(".productsSection")}>Him</button>
-            <button type="button" onClick={() => scrollToSection(".looksSection")}>Sets</button>
+            <button type="button" onClick={() => scrollTo(".productsSection")}>NEW IN</button>
+            <button type="button" onClick={() => scrollTo(".categorySection")}>WOMEN</button>
+            <button type="button" onClick={() => scrollTo(".productsSection")}>HIM</button>
+            <button type="button" onClick={() => scrollTo(".looksSection")}>SETS</button>
           </div>
-          <button type="button" className="brandLink" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            <Logo />
+
+          <button className="brandLink" type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            <span className="logo">BLAQUE LOTUS</span>
           </button>
+
           <div className="navGroup navRight">
-            <button type="button" onClick={() => scrollToSection(".categoryGrid")}>Couples Edit</button>
-            <button type="button" onClick={() => scrollToSection(".productsSection")}>Best Sellers</button>
-            <button type="button" onClick={() => scrollToSection(".looksSection")}>Sale</button>
+            <button type="button" onClick={() => scrollTo(".categorySection")}>COUPLES EDIT</button>
+            <button type="button" onClick={() => scrollTo(".productsSection")}>BEST SELLERS</button>
             <button className="iconButton" aria-label="Styling concierge" onClick={() => setNoteOpen(true)}>
-              <User size={21} strokeWidth={1.4} />
+              <User size={20} strokeWidth={1.5} />
             </button>
             <button className="iconButton cartIconButton" aria-label="Cart" onClick={() => setCartOpen(true)}>
-              <ShoppingBag size={20} strokeWidth={1.4} />
+              <ShoppingBag size={20} strokeWidth={1.5} />
               {cartCount ? <span>{cartCount}</span> : null}
             </button>
           </div>
@@ -402,43 +317,64 @@ function App() {
       </header>
 
       <main>
+        {/* ── Hero ───────────────────────────────────── */}
         <section className="hero">
-          <div className="retroLines" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
+          {/* Animated SVG curved retro lines */}
+          <svg className="retroLinesSvg" viewBox="0 0 500 500" fill="none" aria-hidden="true">
+            <path d="M-100 200 C 150 200, 250 100, 250 -100" stroke="#7C6754" strokeWidth="22" strokeLinecap="round"/>
+            <path d="M-100 240 C 170 240, 280 120, 280 -100" stroke="#A98F78" strokeWidth="22" strokeLinecap="round"/>
+            <path d="M-100 280 C 190 280, 310 140, 310 -100" stroke="#E4DAC3" strokeWidth="22" strokeLinecap="round"/>
+          </svg>
+
           <img src={asset("hero-couple")} alt="" className="heroImage" />
+          <div className="heroGradient" aria-hidden="true" />
+
           <div className="heroCopy">
-            <h1>
-              City Play.
-              <br />
-              Luxe Lines.
-            </h1>
-            <p>Cartoon chic for her and the one beside her.</p>
-            <div className="heroActions">
-              <button className="button buttonDark" type="button" onClick={() => scrollToSection(".productsSection")}>
-                Shop Women
-              </button>
-              <button className="button buttonLight" type="button" onClick={() => scrollToSection(".categoryGrid")}>
-                Shop Couples
-              </button>
+            <div className="heroCopyInner">
+              <h1>CITY PLAY.<br />LUXE LINES.</h1>
+              <p>Cartoon chic for her and<br />the one beside her.</p>
+              <div className="heroActions">
+                <button className="button buttonDark" type="button" onClick={() => scrollTo(".productsSection")}>
+                  SHOP WOMEN
+                </button>
+                <button className="button buttonLight" type="button" onClick={() => scrollTo(".categorySection")}>
+                  SHOP COUPLES
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="categoryGrid" aria-label="Featured categories" data-reveal>
-          {categories.map(([label, image]) => (
-            <button type="button" className="categoryTile" key={label} onClick={() => scrollToSection(".productsSection")}>
-              <img src={asset(image)} alt="" />
-              <span>{label}</span>
-              <small>Shop now</small>
-            </button>
-          ))}
+        {/* ── Category arched tiles ───────────────────── */}
+        <section className="categorySection" aria-label="Featured categories" data-reveal>
+          <div className="categoryGrid">
+            {categories.map(([label, image]) => (
+              <button
+                type="button"
+                className="categoryTile"
+                key={label}
+                onClick={() => scrollTo(".productsSection")}
+              >
+                <div className="categoryImageWrap">
+                  <img src={asset(image)} alt={label} />
+                </div>
+                <div className="categoryLabel">
+                  <span>{label}</span>
+                  <small>SHOP NOW →</small>
+                </div>
+              </button>
+            ))}
+          </div>
         </section>
 
+        {/* ── Best Sellers ────────────────────────────── */}
         <section className="sectionBlock productsSection">
-          <SectionHeader title="Best Sellers" action="View All" onAction={() => setSearchOpen(true)} />
+          <div className="sectionHeader" data-reveal>
+            <h2>BEST SELLERS</h2>
+            <button type="button" className="textLink" onClick={() => setSearchOpen(true)}>
+              VIEW ALL <ArrowRight size={16} strokeWidth={1.5} />
+            </button>
+          </div>
           <div className="productGrid">
             {products.map((product) => (
               <ProductCard
@@ -455,120 +391,173 @@ function App() {
           </div>
         </section>
 
-        <section className="fabricBand" data-reveal>
-          <img src={asset("fabric-story")} alt="Blaque Lotus fabric detail" />
-          <div className="fabricCopy">
-            <span>Fabric. Fit. Feel.</span>
-            <h2>Our Off Duty Standard.</h2>
-            <p>
-              Every piece is crafted in premium, breathable fabrics with a fit
-              that moves with you. Made to be worn well. Designed to last.
-            </p>
-            <div className="fabricIcons">
-              <div>
-                <Sparkles size={24} strokeWidth={1.1} />
-                <small>Premium Fabrics</small>
-              </div>
-              <div>
-                <Clover size={24} strokeWidth={1.1} />
-                <small>Luxe Comfort</small>
-              </div>
-              <div>
-                <Feather size={24} strokeWidth={1.1} />
-                <small>Timeless Design</small>
-              </div>
-              <div>
-                <Leaf size={24} strokeWidth={1.1} />
-                <small>Made To Travel</small>
-              </div>
+        {/* ── Fabric editorial ────────────────────────── */}
+        <section className="fabricSection" data-reveal>
+          <div className="fabricInner">
+            <div className="fabricImageWrap">
+              <img src={asset("fabric-story")} alt="Blaque Lotus fabric detail" />
             </div>
-            <button className="button buttonLight fabricButton" type="button" onClick={() => setNoteOpen(true)}>
-              Our Fabric Story
-            </button>
+            <div className="fabricCard">
+              <small>Fabric. Fit. Feel.</small>
+              <h2>OUR OFF DUTY<br />STANDARD.</h2>
+              <p>
+                Every piece is crafted in premium, breathable fabrics with a fit
+                that moves with you. Made to be worn well. Designed to last beyond seasons.
+              </p>
+              <div className="fabricIcons">
+                <div>
+                  <div className="fabricIconCircle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6754"><circle cx="12" cy="12" r="10" strokeWidth="1.5"/></svg>
+                  </div>
+                  <small>PREMIUM FABRICS</small>
+                </div>
+                <div>
+                  <div className="fabricIconCircle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6754"><path d="M12 2L2 7l10 5 10-5-10-5z" strokeWidth="1.5"/></svg>
+                  </div>
+                  <small>LUXE COMFORT</small>
+                </div>
+                <div>
+                  <div className="fabricIconCircle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6754"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" strokeWidth="1.5"/></svg>
+                  </div>
+                  <small>TIMELESS DESIGN</small>
+                </div>
+                <div>
+                  <div className="fabricIconCircle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6754"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeWidth="1.5"/></svg>
+                  </div>
+                  <small>MADE TO TRAVEL</small>
+                </div>
+              </div>
+              <button className="fabricCta" type="button" onClick={() => setNoteOpen(true)}>
+                READ OUR STORY →
+              </button>
+            </div>
           </div>
         </section>
 
-        <section className="sectionBlock looksSection">
-          <SectionHeader title="Shop The Look" action="View All Looks" onAction={() => scrollToSection(".looksSection")} />
+        {/* ── Shop the Look ───────────────────────────── */}
+        <section className="looksSection">
+          <div className="sectionHeader" data-reveal>
+            <h2>SHOP THE LOOK</h2>
+            <button type="button" className="textLink" onClick={() => scrollTo(".looksSection")}>
+              VIEW ALL LOOKS <ArrowRight size={16} strokeWidth={1.5} />
+            </button>
+          </div>
           <div className="lookGrid">
             {looks.map((look) => (
               <article className="lookCard" key={look.name} data-reveal>
-                <img src={asset(look.image)} alt={look.name} />
-                <div>
+                <div className="lookImageWrap">
+                  <img src={asset(look.image)} alt={look.name} />
+                </div>
+                <div className="lookInfo">
                   <h3>{look.name}</h3>
-                  <p>{look.items.join("\n")}</p>
+                  <ul>
+                    {look.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                   <strong>{look.price}</strong>
-                  <button type="button" onClick={() => addToCart(products[0])}>Shop The Look</button>
+                  <button className="button buttonLight" type="button" onClick={() => addToCart(products[0])}>
+                    SHOP THIS LOOK
+                  </button>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="sectionBlock socialSection">
-          <SectionHeader title="Off Duty. Everywhere." action="See More On Instagram" onAction={() => setNoteOpen(true)} />
-          <div className="socialStrip" data-reveal>
-            {social.map((image, index) => (
-              <img src={asset(image)} alt="" key={`${image}-${index}`} />
+        {/* ── Social / Instagram ──────────────────────── */}
+        <section className="socialSection" data-reveal>
+          <div className="socialHeader">
+            <h2>OFF DUTY. EVERYWHERE.</h2>
+            <button type="button" className="textLink" onClick={() => setNoteOpen(true)}>
+              @BLAQUELOTUS <ArrowRight size={16} strokeWidth={1.5} />
+            </button>
+          </div>
+          <div className="socialStrip">
+            {social.map((image, i) => (
+              <div className="socialTile" key={`${image}-${i}`}>
+                <img src={asset(image)} alt="" />
+              </div>
             ))}
           </div>
         </section>
       </main>
 
-      <footer>
-        <section className="newsletter" aria-label="Newsletter signup">
-          <Mail size={44} strokeWidth={1.1} />
-          <div>
-            <h2>Be The First To Know</h2>
-            <p>New drops, exclusive access, and style delivered straight to your inbox.</p>
+      {/* ── Newsletter bar ──────────────────────────── */}
+      <section className="newsletter" aria-label="Newsletter signup">
+        <div className="newsletterInner">
+          <div className="newsletterLeft">
+            <div className="newsletterIconCircle">
+              <Mail size={28} strokeWidth={1.2} />
+            </div>
+            <div>
+              <h2>THE INNER CIRCLE</h2>
+              <p>New drops, exclusive access, and style delivered directly.</p>
+            </div>
           </div>
           <form onSubmit={handleNewsletter}>
             <label htmlFor="email">Email address</label>
             <input id="email" name="email" type="email" placeholder="Enter your email" required />
             <button type="submit" disabled={sending === "newsletter"}>
-              {sending === "newsletter" ? "Sending" : "Subscribe"}
+              {sending === "newsletter" ? "SENDING" : "SUBSCRIBE"}
             </button>
           </form>
-        </section>
-        <section className="footerMain">
+        </div>
+      </section>
+
+      {/* ── Footer ─────────────────────────────────── */}
+      <footer>
+        <div className="footerMain">
           <div className="footerBrand">
-            <Logo footer />
-            <p>Luxury street essentials for her. Made to wear. Styled to be.</p>
+            <span className="logoFooter">BLAQUE LOTUS</span>
+            <p>Luxury street essentials for her and the one beside her.<br />Made to wear. Styled to be.</p>
             <div className="socialIcons" aria-label="Social links">
-              <Instagram size={16} strokeWidth={1.35} />
-              <Facebook size={16} strokeWidth={1.35} />
-              <Youtube size={17} strokeWidth={1.35} />
+              <a href="#" aria-label="Instagram"><Instagram size={17} strokeWidth={1.4} /></a>
+              <a href="#" aria-label="Facebook"><Facebook size={17} strokeWidth={1.4} /></a>
+              <a href="#" aria-label="YouTube"><Youtube size={17} strokeWidth={1.4} /></a>
             </div>
-            <small>© 2026 Blaque Lotus. All rights reserved.</small>
           </div>
-          <FooterColumn title="Shop" links={["New In", "Women", "Him", "Sets", "Couples Edit", "Best Sellers", "Sale"]} />
-          <FooterColumn
-            title="Customer Care"
-            links={["FAQ", "Shipping", "Returns & Exchanges", "Size Guide", "Care Guide", "Contact Us"]}
-            onContact={() => setNoteOpen(true)}
-          />
-          <FooterColumn title="About" links={["Our Story", "Sustainability", "Careers", "Affiliates", "Press"]} />
-          <FooterColumn title="Legal" links={["Terms & Conditions", "Privacy Policy", "Accessibility"]} />
-          <div className="paymentRow" aria-label="Accepted payment methods">
-            {["Shop", "Pay", "GPay", "Klarna", "PayPal", "MC", "Visa", "Amex"].map((label) => (
-              <span key={label}>
-                {label === "MC" ? <CreditCard size={13} strokeWidth={1.4} /> : label}
-              </span>
+          <div className="footerColumn">
+            <h3>SHOP</h3>
+            {["New In", "Women", "Him", "Sets", "Best Sellers"].map((l) => (
+              <button key={l} type="button" onClick={() => scrollTo(".productsSection")}>{l}</button>
             ))}
           </div>
-        </section>
+          <div className="footerColumn">
+            <h3>CUSTOMER CARE</h3>
+            {["FAQ & Shipping", "Returns & Exchanges", "Size Guide"].map((l) => (
+              <button key={l} type="button">{l}</button>
+            ))}
+            <button type="button" onClick={() => setNoteOpen(true)}>Contact The Concierge</button>
+          </div>
+          <div className="footerColumn">
+            <h3>LEGAL</h3>
+            {["Our Story", "Terms & Conditions", "Privacy Policy"].map((l) => (
+              <button key={l} type="button">{l}</button>
+            ))}
+          </div>
+        </div>
+        <div className="footerBottom">
+          <p>© 2026 BLAQUE LOTUS. ALL RIGHTS RESERVED.</p>
+          <div className="paymentRow" aria-label="Accepted payment methods">
+            {["Shop", "Pay", "GPay", "Klarna", "PayPal", <CreditCard key="mc" size={11} strokeWidth={1.4} />, "Visa", "Amex"].map((label, i) => (
+              <span key={i}>{label}</span>
+            ))}
+          </div>
+        </div>
       </footer>
 
+      {/* ── Overlays ───────────────────────────────── */}
       <SearchPanel
         open={searchOpen}
         query={query}
         setQuery={setQuery}
         products={filteredProducts}
         onClose={() => setSearchOpen(false)}
-        onQuickView={(product) => {
-          setQuickView(product);
-          setSearchOpen(false);
-        }}
+        onQuickView={(p) => { setQuickView(p); setSearchOpen(false); }}
       />
       <CartDrawer
         open={cartOpen}
@@ -615,7 +604,7 @@ function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQu
           aria-label={`Save ${product.name}`}
           onClick={() => onWish(product.id)}
         >
-          <Heart size={20} strokeWidth={1.45} />
+          <Heart size={16} strokeWidth={1.5} />
         </button>
         <button type="button" className="quickAdd" onClick={() => onAdd(product)}>
           Quick Add
@@ -645,14 +634,14 @@ function SearchPanel({ open, query, setQuery, products, onClose, onQuickView }) 
     <aside className={open ? "panelOverlay panelOverlayOpen" : "panelOverlay"} aria-hidden={!open}>
       <div className="searchPanel">
         <button className="closeButton" type="button" onClick={onClose} aria-label="Close search">
-          <X size={18} strokeWidth={1.5} />
+          <X size={16} strokeWidth={1.5} />
         </button>
         <h2>Find Your Fit</h2>
         <label htmlFor="searchInput">Search products</label>
         <input
           id="searchInput"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search color, set, or style"
         />
         <div className="searchResults">
@@ -677,7 +666,7 @@ function CartDrawer({ open, cart, total, sending, onClose, onUpdate, onCheckout 
       <div className="drawerHeader">
         <h2>Your Bag</h2>
         <button className="closeButton" type="button" onClick={onClose} aria-label="Close cart">
-          <X size={18} strokeWidth={1.5} />
+          <X size={16} strokeWidth={1.5} />
         </button>
       </div>
       {cart.length ? (
@@ -691,12 +680,12 @@ function CartDrawer({ open, cart, total, sending, onClose, onUpdate, onCheckout 
                   <p>{item.color} · {item.size}</p>
                   <strong>{money(item.price)}</strong>
                   <div className="qtyControl">
-                    <button type="button" onClick={() => onUpdate(item.cartId, item.quantity - 1)} aria-label="Decrease quantity">
-                      <Minus size={13} />
+                    <button type="button" onClick={() => onUpdate(item.cartId, item.quantity - 1)} aria-label="Decrease">
+                      <Minus size={12} />
                     </button>
                     <span>{item.quantity}</span>
-                    <button type="button" onClick={() => onUpdate(item.cartId, item.quantity + 1)} aria-label="Increase quantity">
-                      <Plus size={13} />
+                    <button type="button" onClick={() => onUpdate(item.cartId, item.quantity + 1)} aria-label="Increase">
+                      <Plus size={12} />
                     </button>
                   </div>
                 </div>
@@ -709,7 +698,7 @@ function CartDrawer({ open, cart, total, sending, onClose, onUpdate, onCheckout 
               <strong>{money(total)}</strong>
             </p>
             <button className="button buttonDark" type="button" onClick={onCheckout} disabled={sending}>
-              {sending ? "Sending" : "Send Checkout Note"}
+              {sending ? "Sending…" : "Send Checkout Note"}
             </button>
           </div>
         </>
@@ -727,8 +716,8 @@ function ConciergeDrawer({ open, sending, onClose, onSubmit }) {
     <aside className={open ? "cartDrawer cartDrawerOpen" : "cartDrawer"} aria-hidden={!open}>
       <div className="drawerHeader">
         <h2>Styling Note</h2>
-        <button className="closeButton" type="button" onClick={onClose} aria-label="Close styling form">
-          <X size={18} strokeWidth={1.5} />
+        <button className="closeButton" type="button" onClick={onClose} aria-label="Close">
+          <X size={16} strokeWidth={1.5} />
         </button>
       </div>
       <form className="conciergeForm" onSubmit={onSubmit}>
@@ -740,7 +729,7 @@ function ConciergeDrawer({ open, sending, onClose, onSubmit }) {
         <label htmlFor="message">Message</label>
         <textarea id="message" name="message" rows="6" placeholder="Tell us what you want styled." required />
         <button className="button buttonDark" type="submit" disabled={sending}>
-          {sending ? "Sending" : "Send Message"}
+          {sending ? "Sending…" : "Send Message"}
         </button>
       </form>
     </aside>
@@ -750,23 +739,17 @@ function ConciergeDrawer({ open, sending, onClose, onSubmit }) {
 function QuickView({ product, selectedIndex, onVariant, onAdd, onClose }) {
   const [size, setSize] = useState(product.sizes[2] || product.sizes[0]);
   const variant = product.variants[selectedIndex];
-
   return (
     <div className="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="quickViewTitle">
       <article className="quickView">
         <button className="closeButton" type="button" onClick={onClose} aria-label="Close quick view">
-          <X size={18} strokeWidth={1.5} />
+          <X size={16} strokeWidth={1.5} />
         </button>
         <div className="quickGallery">
           <img src={asset(variant.image)} alt={product.name} />
           <div>
             {product.variants.map((item, index) => (
-              <button
-                type="button"
-                key={item.image}
-                className={index === selectedIndex ? "thumbActive" : ""}
-                onClick={() => onVariant(product.id, index)}
-              >
+              <button type="button" key={item.image} className={index === selectedIndex ? "thumbActive" : ""} onClick={() => onVariant(product.id, index)}>
                 <img src={asset(item.image)} alt="" />
               </button>
             ))}
@@ -777,14 +760,9 @@ function QuickView({ product, selectedIndex, onVariant, onAdd, onClose }) {
           <h2 id="quickViewTitle">{product.name}</h2>
           <p>{variant.label} · {money(product.price)}</p>
           <div className="sizePicker">
-            {product.sizes.map((item) => (
-              <button
-                type="button"
-                key={item}
-                className={item === size ? "sizeActive" : ""}
-                onClick={() => setSize(item)}
-              >
-                {item}
+            {product.sizes.map((s) => (
+              <button type="button" key={s} className={s === size ? "sizeActive" : ""} onClick={() => setSize(s)}>
+                {s}
               </button>
             ))}
           </div>
@@ -793,19 +771,6 @@ function QuickView({ product, selectedIndex, onVariant, onAdd, onClose }) {
           </button>
         </div>
       </article>
-    </div>
-  );
-}
-
-function FooterColumn({ title, links, onContact }) {
-  return (
-    <div className="footerColumn">
-      <h3>{title}</h3>
-      {links.map((link) => (
-        <button type="button" key={link} onClick={link === "Contact Us" ? onContact : undefined}>
-          {link}
-        </button>
-      ))}
     </div>
   );
 }
