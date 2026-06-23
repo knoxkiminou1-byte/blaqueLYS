@@ -232,7 +232,13 @@ function App() {
   const [checkoutStep, setCheckoutStep] = useState(null);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [showBackTop, setShowBackTop]   = useState(false);
+  const [loaded, setLoaded]             = useState(false);
   const cursorRef = useRef(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 1700);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const onMove = (e) => {
@@ -376,10 +382,17 @@ function App() {
   };
 
   return (
-    <div className="siteShell">
+    <div className={loaded ? "siteShell siteLoaded" : "siteShell"}>
+      {/* ── Preloader ─────────────────────────────── */}
+      <div className={loaded ? "preloader preloaderDone" : "preloader"} aria-hidden="true">
+        <div className="preloaderInner">
+          <span className="preloaderLogo">BLAQUELYŚ</span>
+          <div className="preloaderBar"><div className="preloaderFill" /></div>
+          <span className="preloaderSub">LUXURY STREET ESSENTIALS</span>
+        </div>
+      </div>
       <div className="customCursor" ref={cursorRef} aria-hidden="true" />
       <div className="scrollProgressBar" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
-      <div className="canvasGrain" aria-hidden="true" />
 
       <div className="announcement">
         <div><Truck size={13} strokeWidth={1.6} /> FREE U.S. SHIPPING ON ORDERS $150+</div>
@@ -438,7 +451,10 @@ function App() {
               <div className="heroEyebrow">
                 <span className="heroPill">✦ New Drop Live</span>
               </div>
-              <h1>CITY<br />PLAY.<br />LUXE<br />LINES.</h1>
+              <h1>
+                <span className="heroLine" style={{"--d":"500ms"}}>CITY PLAY.</span>
+                <span className="heroLine" style={{"--d":"680ms"}}>LUXE LINES.</span>
+              </h1>
               <p><em>Cartoon chic for her and<br />the one beside her.</em></p>
               <div className="heroActions">
                 <button className="button buttonDark" type="button" onClick={() => { setActiveFilter("women"); scrollTo(".productsSection"); }}>
@@ -475,6 +491,14 @@ function App() {
           </div>
         </section>
 
+        {/* ── Press strip ─────────────────────────────── */}
+        <div className="pressStrip" data-reveal>
+          <span className="pressLabel">AS FEATURED IN</span>
+          {["VOGUE", "ESSENCE", "ELLE", "HARPER'S BAZAAR", "WWD", "REFINERY29"].map((p) => (
+            <span className="pressName" key={p}>{p}</span>
+          ))}
+        </div>
+
         {/* ── Marquee ticker ──────────────────────────── */}
         <div className="marqueeBar" aria-hidden="true">
           <div className="marqueeTrack">
@@ -483,6 +507,21 @@ function App() {
             ]).map((t, i) => <span key={i}>{t}</span>)}
           </div>
         </div>
+
+        {/* ── Stats bar ───────────────────────────────── */}
+        <section className="statsSection">
+          {[
+            { num: "6+",   label: "SIGNATURE PIECES" },
+            { num: "∞",    label: "LOOKS TO BUILD" },
+            { num: "100%", label: "PREMIUM FABRIC" },
+            { num: "0",    label: "COMPROMISE" },
+          ].map(({ num, label }) => (
+            <div className="statItem" key={label} data-reveal>
+              <strong>{num}</strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </section>
 
         {/* ── Best Sellers ────────────────────────────── */}
         <section className="sectionBlock productsSection">
@@ -636,6 +675,12 @@ function App() {
             ))}
           </div>
         </section>
+
+        {/* ── Editorial band ──────────────────────────── */}
+        <div className="editorialBand" aria-hidden="true">
+          <p>OFF DUTY.</p>
+          <p>EVERY<br/>WHERE.</p>
+        </div>
 
         {/* ── Social / Instagram ──────────────────────── */}
         <section className="socialSection" data-reveal>
@@ -792,10 +837,11 @@ function App() {
 }
 
 function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQuickView, onAdd }) {
+  const [sizeOpen, setSizeOpen] = useState(false);
   const variant   = product.variants[selectedIndex];
   const hoverImg  = product.variants[(selectedIndex + 1) % product.variants.length];
   return (
-    <article className="productCard" data-reveal>
+    <article className="productCard" data-reveal onMouseLeave={() => setSizeOpen(false)}>
       <div className="productImage">
         {product.badge && (
           <span className={`productBadge badge${product.badge.replace(" ", "")}`}>{product.badge}</span>
@@ -811,24 +857,44 @@ function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQu
         >
           <Heart size={16} strokeWidth={1.5} />
         </button>
-        <button type="button" className="quickAdd" onClick={() => onAdd(product)}>
-          QUICK ADD
-        </button>
+        <div className={sizeOpen ? "quickAddWrap quickAddOpen" : "quickAddWrap"}>
+          {sizeOpen ? (
+            <div className="quickSizePop">
+              {product.sizes.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => { onAdd(product, s); setSizeOpen(false); }}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <button type="button" className="quickAdd" onClick={() => setSizeOpen(true)}>
+              QUICK ADD
+            </button>
+          )}
+        </div>
       </div>
-      <h3>{product.name}</h3>
-      <p>{variant.label}</p>
-      <strong>{money(product.price)}</strong>
-      <div className="swatches" aria-label={`${product.name} colors`}>
-        {product.swatches.map((color, index) => (
-          <button
-            type="button"
-            className={index === selectedIndex ? "swatchActive" : ""}
-            key={color}
-            style={{ background: color }}
-            aria-label={`${product.name} ${product.variants[index].label}`}
-            onClick={() => onVariant(product.id, index)}
-          />
-        ))}
+      <div className="productCardBody">
+        <div className="productCardTop">
+          <h3>{product.name}</h3>
+          <strong>{money(product.price)}</strong>
+        </div>
+        <p>{variant.label}</p>
+        <div className="swatches" aria-label={`${product.name} colors`}>
+          {product.swatches.map((color, index) => (
+            <button
+              type="button"
+              className={index === selectedIndex ? "swatchActive" : ""}
+              key={color}
+              style={{ background: color }}
+              aria-label={`${product.name} ${product.variants[index].label}`}
+              onClick={() => onVariant(product.id, index)}
+            />
+          ))}
+        </div>
       </div>
     </article>
   );
