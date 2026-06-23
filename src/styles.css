@@ -109,6 +109,16 @@ header {
   left: 0;
   right: 0;
   z-index: 50;
+  transition: background 350ms ease, box-shadow 350ms ease, backdrop-filter 350ms ease;
+}
+
+header.scrolled {
+  position: fixed;
+  top: 0;
+  background: rgba(249,247,241,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(74,59,50,0.12), 0 8px 32px rgba(74,59,50,0.08);
 }
 
 .nav {
@@ -235,7 +245,13 @@ header {
 .heroGradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(249,247,241,0.85) 0%, rgba(249,247,241,0.5) 40%, rgba(249,247,241,0.05) 70%, transparent 100%);
+  background: linear-gradient(
+    to right,
+    rgba(249,247,241,0.96) 0%,
+    rgba(249,247,241,0.75) 32%,
+    rgba(249,247,241,0.2) 60%,
+    transparent 100%
+  );
   z-index: 1;
 }
 
@@ -271,14 +287,15 @@ header {
 .heroCopyInner { max-width: 580px; }
 
 .heroCopy h1 {
-  margin: 0 0 24px;
+  margin: 0 0 28px;
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(60px, 7vw, 96px);
+  font-size: clamp(64px, 8vw, 112px);
   font-weight: 400;
-  line-height: 0.92;
+  line-height: 0.9;
   text-transform: uppercase;
   color: var(--brown);
-  text-shadow: 0 4px 20px rgba(249,247,241,0.8), 0 2px 4px rgba(255,255,255,1);
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.7);
 }
 
 .heroCopy p {
@@ -333,6 +350,32 @@ header {
   background: var(--brown);
   color: #fff;
   transform: translateY(-2px);
+}
+
+/* ─── Marquee ticker belt ──────────────────── */
+.marqueeBar {
+  background: var(--brown);
+  color: var(--cream);
+  overflow: hidden;
+  padding: 14px 0;
+  white-space: nowrap;
+}
+
+.marqueeTrack {
+  display: inline-flex;
+  gap: 28px;
+  animation: marqueeScroll 28s linear infinite;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+.marqueeTrack span { display: inline-block; }
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* ─── Category grid (arched tiles) ────────── */
@@ -428,18 +471,30 @@ header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(74,59,50,0.2);
-  padding-bottom: 20px;
-  margin-bottom: 48px;
+  padding-bottom: 22px;
+  margin-bottom: 52px;
+  border-bottom: 0;
+  position: relative;
+}
+
+.sectionHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, var(--brown), rgba(74,59,50,0.15));
 }
 
 .sectionHeader h2 {
   margin: 0;
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(32px, 3.5vw, 52px);
+  font-size: clamp(32px, 3.5vw, 56px);
   font-weight: 400;
   text-transform: uppercase;
   color: var(--brown);
+  letter-spacing: 0.02em;
 }
 
 .textLink {
@@ -473,16 +528,16 @@ header {
   position: relative;
   aspect-ratio: 3/4;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 20px;
   background: #EBE7E0;
-  box-shadow: 0 4px 12px rgba(74,59,50,0.08);
-  transition: all 500ms cubic-bezier(0.25,1,0.5,1);
+  box-shadow: 0 2px 8px rgba(74,59,50,0.06);
+  transition: all 550ms cubic-bezier(0.25,1,0.5,1);
   margin-bottom: 16px;
 }
 
 .productImage:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -10px rgba(74,59,50,0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px -12px rgba(74,59,50,0.22);
 }
 
 .productImage img {
@@ -747,6 +802,10 @@ header {
 }
 
 .lookCard:nth-child(even) { margin-top: 80px; }
+.lookCard:nth-child(1) { transition-delay: 0ms; }
+.lookCard:nth-child(2) { transition-delay: 120ms; }
+.lookCard:nth-child(3) { transition-delay: 60ms; }
+.lookCard:nth-child(4) { transition-delay: 180ms; }
 
 .lookImageWrap {
   flex: 0 0 58%;
@@ -859,11 +918,12 @@ header {
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(74,59,50,0.1);
   transition: all 500ms cubic-bezier(0.25,1,0.5,1);
+  position: relative;
 }
 
 .socialTile:nth-child(odd)  { transform: translateY(-16px); }
 .socialTile:nth-child(even) { transform: translateY(16px); }
-.socialTile:hover { transform: translateY(-8px) scale(1.02) !important; box-shadow: 0 20px 40px -10px rgba(74,59,50,0.2); }
+.socialTile:hover { transform: translateY(-10px) scale(1.03) !important; box-shadow: 0 28px 56px -10px rgba(74,59,50,0.28); }
 
 .socialTile:nth-child(1) { aspect-ratio: 1; }
 .socialTile:nth-child(2) { aspect-ratio: 3/4; }
@@ -875,14 +935,47 @@ header {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.25,1,0.5,1);
 }
+
+.socialTile:hover img { transform: scale(1.06); }
+
+.socialTile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(42,35,28,0);
+  transition: background 400ms ease;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.socialTile:hover::after { background: rgba(42,35,28,0.3); }
 
 /* ─── Newsletter bar ───────────────────────── */
 .newsletter {
-  background: var(--light-brown);
+  background: var(--brown);
   color: #fff;
-  padding: 56px 48px;
-  margin-top: 20px;
+  padding: 72px 48px;
+  margin-top: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.newsletter::before {
+  content: 'BLAQUELYŚ';
+  position: absolute;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 220px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.03);
+  white-space: nowrap;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  letter-spacing: 0.1em;
+  line-height: 1;
 }
 
 .newsletterInner {
@@ -1089,13 +1182,21 @@ footer {
 
 /* ─── Reveal animation ─────────────────────── */
 [data-reveal] {
-  opacity: 1;
-  transition: opacity 600ms ease, transform 600ms ease;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 750ms cubic-bezier(0.25,1,0.5,1), transform 750ms cubic-bezier(0.25,1,0.5,1);
 }
 [data-reveal].isVisible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
+
+/* stagger delays for category tiles */
+.categoryTile:nth-child(1) { transition-delay: 0ms; }
+.categoryTile:nth-child(2) { transition-delay: 80ms; }
+.categoryTile:nth-child(3) { transition-delay: 160ms; }
+.categoryTile:nth-child(4) { transition-delay: 240ms; }
+.categoryTile:nth-child(5) { transition-delay: 320ms; }
 
 /* ─── Panels / Drawers ─────────────────────── */
 .panelOverlay {

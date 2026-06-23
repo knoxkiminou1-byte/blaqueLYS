@@ -180,6 +180,14 @@ function App() {
   const [toast, setToast]         = useState("");
   const [noteOpen, setNoteOpen]   = useState(false);
   const [sending, setSending]     = useState("");
+  const [scrolled, setScrolled]   = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -191,7 +199,7 @@ function App() {
           }
         });
       },
-      { threshold: 0.1 },
+      { threshold: 0, rootMargin: "0px 0px 80px 0px" },
     );
     document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
     return () => observer.disconnect();
@@ -286,7 +294,7 @@ function App() {
       </div>
 
       {/* Floating header */}
-      <header>
+      <header className={scrolled ? "scrolled" : ""}>
         <nav className="nav" aria-label="Main navigation">
           <div className="navGroup navLeft">
             <button className="iconButton" aria-label="Search" onClick={() => setSearchOpen(true)}>
@@ -346,13 +354,14 @@ function App() {
         </section>
 
         {/* ── Category arched tiles ───────────────────── */}
-        <section className="categorySection" aria-label="Featured categories" data-reveal>
+        <section className="categorySection" aria-label="Featured categories">
           <div className="categoryGrid">
             {categories.map(([label, image]) => (
               <button
                 type="button"
                 className="categoryTile"
                 key={label}
+                data-reveal
                 onClick={() => scrollTo(".productsSection")}
               >
                 <div className="categoryImageWrap">
@@ -366,6 +375,15 @@ function App() {
             ))}
           </div>
         </section>
+
+        {/* ── Marquee ticker ──────────────────────────── */}
+        <div className="marqueeBar" aria-hidden="true">
+          <div className="marqueeTrack">
+            {[...Array(3)].flatMap(() => [
+              "NEW COLLECTION", "✦", "CITY PLAY", "✦", "LUXE LINES", "✦", "BLAQUELYŚ", "✦", "OFF DUTY EVERYWHERE", "✦", "PREMIUM FABRICS", "✦", "FREE U.S. SHIPPING $150+", "✦",
+            ]).map((t, i) => <span key={i}>{t}</span>)}
+          </div>
+        </div>
 
         {/* ── Best Sellers ────────────────────────────── */}
         <section className="sectionBlock productsSection">
