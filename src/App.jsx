@@ -1,11 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight, ArrowUp, Check, CreditCard, Heart, Instagram,
   Facebook, Mail, Minus, Plus, Search, ShoppingBag, Truck,
-  RefreshCw, Ruler, User, X, Youtube, Tag,
+  RefreshCw, Ruler, Star, User, X, Youtube, Tag, Sparkles, Menu,
 } from "lucide-react";
 
 const asset = (name) => `/assets/generated/${name}.webp`;
+
+const ANNOUNCEMENTS = [
+  { left: <><Truck size={12} strokeWidth={1.7} /> FREE U.S. SHIPPING ON ORDERS $150+</>, center: "NEW DROP LIVE", cta: "SHOP NOW" },
+  { left: <>✦ USE CODE <strong>BLAQU10</strong> FOR 10% OFF</>, center: "CITY PLAY COLLECTION", cta: "EXPLORE" },
+  { left: <><RefreshCw size={12} strokeWidth={1.7} /> EASY RETURNS &amp; EXCHANGES</>, center: "COUPLES EDIT IS HERE", cta: "SHOP SETS" },
+];
 
 const categories = [
   ["Lounge",       "category-lounge"],
@@ -25,6 +31,8 @@ const products = [
     badge: "BESTSELLER",
     category: "women",
     isNew: false,
+    rating: 4.9,
+    reviewCount: 214,
     description: "Relaxed silhouette meets elevated essentials. Crafted in our signature soft-touch fabric — breathable, structured, and made for movement. Pairs effortlessly with the Wide Leg Sweatpant.",
     swatches: ["#BFAF9E", "#DED7CD", "#8b7967"],
     variants: [
@@ -43,6 +51,8 @@ const products = [
     badge: "NEW",
     category: "men",
     isNew: true,
+    rating: 4.8,
+    reviewCount: 98,
     description: "Our most-wanted drop. A heavyweight hoodie with a refined structure — minimal branding, maximum presence. Unisex fit, sized to drape.",
     swatches: ["#5D614E", "#7d8068", "#4b4d3a"],
     variants: [
@@ -61,6 +71,8 @@ const products = [
     badge: "BESTSELLER",
     category: "women",
     isNew: false,
+    rating: 4.9,
+    reviewCount: 187,
     description: "Wide, fluid, and endlessly flattering. Our Wide Leg Sweatpant is cut for movement and styled for going somewhere. Set up with the Half Zip for the complete look.",
     swatches: ["#EAE5D9", "#d9cdb8", "#9a8974"],
     variants: [
@@ -79,6 +91,8 @@ const products = [
     badge: "LAST FEW",
     category: "women",
     isNew: false,
+    rating: 4.7,
+    reviewCount: 312,
     description: "Ribbed, second-skin fit. Wear it under the jacket, under the zip, or alone. The tank that goes everywhere and does everything.",
     swatches: ["#2A2A2A", "#8b7863", "#dfd3c0"],
     variants: [
@@ -97,6 +111,8 @@ const products = [
     badge: "NEW",
     category: "sets",
     isNew: true,
+    rating: 4.8,
+    reviewCount: 73,
     description: "The jacket that makes the set. A cropped silhouette in our premium chocolate fabrication — pair with the Ribbed Tank and Wide Leg for the full Blaquelyś uniform.",
     swatches: ["#4A352A", "#a9896c", "#e5d7c0"],
     variants: [
@@ -115,6 +131,8 @@ const products = [
     badge: null,
     category: "men",
     isNew: false,
+    rating: 4.6,
+    reviewCount: 155,
     description: "A tee that actually holds its shape. Premium heavyweight cotton, dropped shoulders, boxy-relaxed fit. The wardrobe anchor.",
     swatches: ["#D1C6B8", "#f0e8d9", "#c4b294"],
     variants: [
@@ -165,6 +183,30 @@ const social = [
   "insta-linen",
 ];
 
+const testimonials = [
+  {
+    text: "The Half Zip is everything. Soft, structured, and it photographs beautifully. This is a brand I'll keep coming back to.",
+    author: "Amara K.",
+    location: "New York",
+    rating: 5,
+    product: "Soft Structure Half Zip",
+  },
+  {
+    text: "Got the Couples Edit for me and my partner. We wore it to dinner and got compliments all night. The quality is unreal.",
+    author: "Jordan & Mya",
+    location: "Atlanta",
+    rating: 5,
+    product: "Cropped Zip Jacket Set",
+  },
+  {
+    text: "Blaquelyś pieces feel twice what you pay for them. The Wide Leg Sweatpant has replaced everything in my rotation.",
+    author: "Simone L.",
+    location: "Los Angeles",
+    rating: 5,
+    product: "Wide Leg Sweatpant",
+  },
+];
+
 const FILTER_TABS = [
   ["all", "ALL"],
   ["new", "NEW IN"],
@@ -193,6 +235,50 @@ const SIZE_GUIDE = {
 };
 
 const money = (value) => `$${value.toFixed(2)}`;
+
+function StarRating({ rating, count }) {
+  return (
+    <div className="starRating" aria-label={`${rating} out of 5 stars`}>
+      {[1,2,3,4,5].map((i) => (
+        <Star
+          key={i}
+          size={10}
+          strokeWidth={0}
+          fill={i <= Math.round(rating) ? "currentColor" : "rgba(124,103,84,0.25)"}
+        />
+      ))}
+      {count !== undefined && <span className="ratingCount">({count})</span>}
+    </div>
+  );
+}
+
+function AnimatedCounter({ target, suffix = "", duration = 1600 }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const isSymbol = isNaN(parseInt(target));
+        if (isSymbol) { setCount(target); return; }
+        const end = parseInt(target);
+        const step = Math.ceil(end / (duration / 16));
+        let current = 0;
+        const timer = setInterval(() => {
+          current = Math.min(current + step, end);
+          setCount(current);
+          if (current >= end) clearInterval(timer);
+        }, 16);
+      }
+    }, { threshold: 0.3 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
+  return <span ref={ref}>{count}{suffix}</span>;
+}
 
 async function sendSiteMessage(payload) {
   try {
@@ -233,11 +319,20 @@ function App() {
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [showBackTop, setShowBackTop]   = useState(false);
   const [loaded, setLoaded]             = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [announcementIdx, setAnnouncementIdx] = useState(0);
   const cursorRef = useRef(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 1700);
+    const t = setTimeout(() => setLoaded(true), 900);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnnouncementIdx((i) => (i + 1) % ANNOUNCEMENTS.length);
+    }, 3800);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -284,6 +379,11 @@ function App() {
     const id = window.setTimeout(() => setToast(""), 2800);
     return () => window.clearTimeout(id);
   }, [toast]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileNavOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileNavOpen]);
 
   const discount = promoApplied ? (PROMO_CODES[promoApplied] || 0) : 0;
   const cartTotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -357,7 +457,7 @@ function App() {
     await sendSiteMessage({ type: "newsletter", email: form.get("email"), source: "footer-newsletter" });
     e.currentTarget.reset();
     setSending("");
-    setToast("You're on the list");
+    setToast("You're on the list ✦");
   };
 
   const handleConcierge = async (e) => {
@@ -381,12 +481,17 @@ function App() {
     setPromoApplied(null);
   };
 
+  const ann = ANNOUNCEMENTS[announcementIdx];
+
   return (
     <div className={loaded ? "siteShell siteLoaded" : "siteShell"}>
       {/* ── Preloader ─────────────────────────────── */}
       <div className={loaded ? "preloader preloaderDone" : "preloader"} aria-hidden="true">
         <div className="preloaderInner">
-          <span className="preloaderLogo">BLAQUELYŚ</span>
+          <div className="preloaderLogoWrap">
+            <span className="preloaderLogo">BLAQUELYŚ</span>
+            <div className="preloaderUnderline" />
+          </div>
           <div className="preloaderBar"><div className="preloaderFill" /></div>
           <span className="preloaderSub">LUXURY STREET ESSENTIALS</span>
         </div>
@@ -394,19 +499,23 @@ function App() {
       <div className="customCursor" ref={cursorRef} aria-hidden="true" />
       <div className="scrollProgressBar" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
 
-      <div className="announcement">
-        <div><Truck size={13} strokeWidth={1.6} /> FREE U.S. SHIPPING ON ORDERS $150+</div>
+      {/* ── Announcement bar ─────────────────────── */}
+      <div className="announcement" key={announcementIdx}>
+        <div className="announcementSide">{ann.left}</div>
         <button className="announcementCenter" type="button" onClick={() => scrollTo(".productsSection")}>
-          NEW DROP LIVE <span>|</span> <a>SHOP NOW</a>
+          {ann.center} <span className="annSep">|</span> <span className="annCta">{ann.cta}</span>
         </button>
-        <div><RefreshCw size={13} strokeWidth={1.7} /> EASY RETURNS</div>
+        <div className="announcementSide announcementRight">
+          <Sparkles size={11} strokeWidth={1.7} /> INNER CIRCLE ACCESS
+        </div>
       </div>
 
+      {/* ── Header ───────────────────────────────── */}
       <header className={scrolled ? "scrolled" : ""}>
         <nav className="nav" aria-label="Main navigation">
           <div className="navGroup navLeft">
             <button className="iconButton" aria-label="Search" onClick={() => setSearchOpen(true)}>
-              <Search size={20} strokeWidth={1.5} />
+              <Search size={19} strokeWidth={1.5} />
             </button>
             <button type="button" onClick={() => { setActiveFilter("new"); scrollTo(".productsSection"); }}>NEW IN</button>
             <button type="button" onClick={() => { setActiveFilter("women"); scrollTo(".productsSection"); }}>WOMEN</button>
@@ -422,19 +531,50 @@ function App() {
             <button type="button" onClick={() => scrollTo(".categorySection")}>COUPLES EDIT</button>
             <button type="button" onClick={() => { setActiveFilter("all"); scrollTo(".productsSection"); }}>BEST SELLERS</button>
             <button className="iconButton" aria-label="Wishlist" onClick={() => setWishlistOpen(true)}>
-              <Heart size={20} strokeWidth={1.5} />
+              <Heart size={19} strokeWidth={1.5} />
               {wishlist.size > 0 && <span className="badgeDot">{wishlist.size}</span>}
             </button>
             <button className="iconButton" aria-label="Styling concierge" onClick={() => setNoteOpen(true)}>
-              <User size={20} strokeWidth={1.5} />
+              <User size={19} strokeWidth={1.5} />
             </button>
             <button className="iconButton cartIconButton" aria-label="Cart" onClick={() => setCartOpen(true)}>
-              <ShoppingBag size={20} strokeWidth={1.5} />
+              <ShoppingBag size={19} strokeWidth={1.5} />
               {cartCount > 0 && <span>{cartCount}</span>}
             </button>
           </div>
+
+          <button className="mobileMenuBtn iconButton" aria-label="Menu" onClick={() => setMobileNavOpen(true)}>
+            <Menu size={22} strokeWidth={1.5} />
+          </button>
         </nav>
       </header>
+
+      {/* ── Mobile Nav ───────────────────────────── */}
+      <div className={mobileNavOpen ? "mobileNav mobileNavOpen" : "mobileNav"} aria-hidden={!mobileNavOpen}>
+        <div className="mobileNavHeader">
+          <span className="logo" style={{fontSize:"28px"}}>BLAQUELYŚ</span>
+          <button className="closeButton" type="button" onClick={() => setMobileNavOpen(false)} aria-label="Close menu">
+            <X size={16} strokeWidth={1.5} />
+          </button>
+        </div>
+        <nav className="mobileNavLinks">
+          {[["NEW IN","new"],["WOMEN","women"],["HIM","men"],["SETS","sets"],["COUPLES EDIT",null],["BEST SELLERS","all"]].map(([label, filter]) => (
+            <button key={label} type="button" onClick={() => {
+              setMobileNavOpen(false);
+              if (filter !== null) setActiveFilter(filter || "all");
+              scrollTo(label === "COUPLES EDIT" ? ".categorySection" : ".productsSection");
+            }}>
+              {label} <ArrowRight size={14} strokeWidth={1.5} />
+            </button>
+          ))}
+        </nav>
+        <div className="mobileNavFooter">
+          <button className="iconButton" aria-label="Search" onClick={() => { setMobileNavOpen(false); setSearchOpen(true); }}><Search size={20} strokeWidth={1.5} /></button>
+          <button className="iconButton" aria-label="Wishlist" onClick={() => { setMobileNavOpen(false); setWishlistOpen(true); }}><Heart size={20} strokeWidth={1.5} /></button>
+          <button className="iconButton" aria-label="Cart" onClick={() => { setMobileNavOpen(false); setCartOpen(true); }}><ShoppingBag size={20} strokeWidth={1.5} /></button>
+        </div>
+      </div>
+      {mobileNavOpen && <div className="mobileNavOverlay" onClick={() => setMobileNavOpen(false)} />}
 
       <main>
         {/* ── Hero ───────────────────────────────────── */}
@@ -457,14 +597,24 @@ function App() {
               </h1>
               <p><em>Cartoon chic for her and<br />the one beside her.</em></p>
               <div className="heroActions">
-                <button className="button buttonDark" type="button" onClick={() => { setActiveFilter("women"); scrollTo(".productsSection"); }}>
+                <button className="button buttonDark shimmerBtn" type="button" onClick={() => { setActiveFilter("women"); scrollTo(".productsSection"); }}>
                   SHOP WOMEN
                 </button>
                 <button className="button buttonLight" type="button" onClick={() => scrollTo(".categorySection")}>
                   SHOP COUPLES
                 </button>
               </div>
+              <div className="heroTrust">
+                <span><Check size={11} strokeWidth={2.5} /> Free shipping $150+</span>
+                <span className="trustSep" />
+                <span><RefreshCw size={11} strokeWidth={2} /> Easy returns</span>
+                <span className="trustSep" />
+                <span><Star size={11} strokeWidth={0} fill="currentColor" /> 4.8 / 5 stars</span>
+              </div>
             </div>
+          </div>
+          <div className="heroScrollHint" aria-hidden="true">
+            <div className="heroScrollDot" />
           </div>
         </section>
 
@@ -481,10 +631,13 @@ function App() {
               >
                 <div className="categoryImageWrap">
                   <img src={asset(image)} alt={label} />
+                  <div className="categoryHoverOverlay">
+                    <span>SHOP NOW</span>
+                  </div>
                 </div>
                 <div className="categoryLabel">
                   <span>{label}</span>
-                  <small>SHOP NOW →</small>
+                  <small>EXPLORE →</small>
                 </div>
               </button>
             ))}
@@ -511,13 +664,15 @@ function App() {
         {/* ── Stats bar ───────────────────────────────── */}
         <section className="statsSection">
           {[
-            { num: "6+",   label: "SIGNATURE PIECES" },
-            { num: "∞",    label: "LOOKS TO BUILD" },
-            { num: "100%", label: "PREMIUM FABRIC" },
-            { num: "0",    label: "COMPROMISE" },
-          ].map(({ num, label }) => (
+            { num: "6",    suffix: "+",   label: "SIGNATURE PIECES" },
+            { num: "4800", suffix: "+ ★", label: "5-STAR REVIEWS" },
+            { num: "100",  suffix: "%",   label: "PREMIUM FABRIC" },
+            { num: "0",    suffix: "",    label: "COMPROMISE" },
+          ].map(({ num, suffix, label }) => (
             <div className="statItem" key={label} data-reveal>
-              <strong>{num}</strong>
+              <strong>
+                <AnimatedCounter target={num} suffix={suffix} />
+              </strong>
               <span>{label}</span>
             </div>
           ))}
@@ -532,7 +687,6 @@ function App() {
             </button>
           </div>
 
-          {/* Filter + Sort Bar */}
           <div className="filterBar" data-reveal>
             <div className="filterTabs">
               {FILTER_TABS.map(([val, label]) => (
@@ -582,6 +736,38 @@ function App() {
           </div>
         </section>
 
+        {/* ── Testimonials ────────────────────────────── */}
+        <section className="testimonialsSection" data-reveal>
+          <div className="testimonialsInner">
+            <div className="testimonialsMeta">
+              <span className="testimonialsEyebrow">✦ Community Love</span>
+              <h2>WHAT THEY'RE<br/>SAYING.</h2>
+              <div className="testimonialsOverallRating">
+                <StarRating rating={5} />
+                <span>4.8 average · 1,200+ reviews</span>
+              </div>
+            </div>
+            <div className="testimonialsGrid">
+              {testimonials.map((t, i) => (
+                <article className="testimonialCard" key={i} data-reveal>
+                  <div className="testimonialTop">
+                    <StarRating rating={t.rating} />
+                    <span className="testimonialProduct">{t.product}</span>
+                  </div>
+                  <blockquote>"{t.text}"</blockquote>
+                  <footer>
+                    <div className="testimonialAvatar">{t.author[0]}</div>
+                    <div>
+                      <strong>{t.author}</strong>
+                      <small>{t.location}</small>
+                    </div>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── Fabric editorial ────────────────────────── */}
         <section className="fabricSection" data-reveal>
           <div className="fabricInner">
@@ -621,7 +807,7 @@ function App() {
                   <small>MADE TO TRAVEL</small>
                 </div>
               </div>
-              <button className="fabricCta" type="button" onClick={() => setNoteOpen(true)}>
+              <button className="fabricCta shimmerBtn" type="button" onClick={() => setNoteOpen(true)}>
                 READ OUR STORY →
               </button>
             </div>
@@ -694,14 +880,20 @@ function App() {
             {social.map((image, i) => (
               <div className="socialTile" key={`${image}-${i}`}>
                 <img src={asset(image)} alt="" />
+                <div className="socialTileOverlay">
+                  <Instagram size={20} strokeWidth={1.5} />
+                </div>
               </div>
             ))}
           </div>
         </section>
       </main>
 
-      {/* ── Newsletter bar ──────────────────────────── */}
+      {/* ── Newsletter ──────────────────────────── */}
       <section className="newsletter" aria-label="Newsletter signup">
+        <div className="newsletterDecor" aria-hidden="true">
+          {[...Array(6)].map((_, i) => <div key={i} className="newsletterOrb" />)}
+        </div>
         <div className="newsletterInner">
           <div className="newsletterLeft">
             <div className="newsletterIconCircle">
@@ -716,7 +908,7 @@ function App() {
             <label htmlFor="email">Email address</label>
             <input id="email" name="email" type="email" placeholder="Enter your email" required />
             <button type="submit" disabled={sending === "newsletter"}>
-              {sending === "newsletter" ? "SENDING" : "SUBSCRIBE"}
+              {sending === "newsletter" ? "SENDING…" : "JOIN NOW"}
             </button>
           </form>
         </div>
@@ -732,6 +924,10 @@ function App() {
               <a href="#" aria-label="Instagram"><Instagram size={17} strokeWidth={1.4} /></a>
               <a href="#" aria-label="Facebook"><Facebook size={17} strokeWidth={1.4} /></a>
               <a href="#" aria-label="YouTube"><Youtube size={17} strokeWidth={1.4} /></a>
+            </div>
+            <div className="footerRating">
+              <StarRating rating={5} />
+              <span>4.8 / 5 · 1,200+ Reviews</span>
             </div>
           </div>
           <div className="footerColumn">
@@ -799,6 +995,7 @@ function App() {
         onClose={() => { setCartOpen(false); setCheckoutStep(null); }}
         onUpdate={updateCart}
         onCheckout={handleCheckout}
+        onQuickView={setQuickView}
       />
       <WishlistDrawer
         open={wishlistOpen}
@@ -823,6 +1020,8 @@ function App() {
           onAdd={addToCart}
           onClose={() => setQuickView(null)}
           onSizeGuide={() => setSizeGuideOpen(true)}
+          relatedProducts={products.filter((p) => p.id !== quickView.id && p.category === quickView.category).slice(0, 3)}
+          onRelatedView={setQuickView}
         />
       )}
       {sizeGuideOpen && (
@@ -855,7 +1054,7 @@ function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQu
           aria-label={`Save ${product.name}`}
           onClick={() => onWish(product.id)}
         >
-          <Heart size={16} strokeWidth={1.5} />
+          <Heart size={15} strokeWidth={1.5} />
         </button>
         <div className={sizeOpen ? "quickAddWrap quickAddOpen" : "quickAddWrap"}>
           {sizeOpen ? (
@@ -872,7 +1071,7 @@ function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQu
             </div>
           ) : (
             <button type="button" className="quickAdd" onClick={() => setSizeOpen(true)}>
-              QUICK ADD
+              + QUICK ADD
             </button>
           )}
         </div>
@@ -883,6 +1082,7 @@ function ProductCard({ product, selectedIndex, isWished, onVariant, onWish, onQu
           <strong>{money(product.price)}</strong>
         </div>
         <p>{variant.label}</p>
+        <StarRating rating={product.rating} count={product.reviewCount} />
         <div className="swatches" aria-label={`${product.name} colors`}>
           {product.swatches.map((color, index) => (
             <button
@@ -936,7 +1136,7 @@ function SearchPanel({ open, query, setQuery, products, onClose, onQuickView }) 
   );
 }
 
-function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplied, promoInput, setPromoInput, onApplyPromo, shippingProgress, shippingLeft, sending, checkoutStep, setCheckoutStep, onClose, onUpdate, onCheckout }) {
+function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplied, promoInput, setPromoInput, onApplyPromo, shippingProgress, shippingLeft, sending, checkoutStep, setCheckoutStep, onClose, onUpdate, onCheckout, onQuickView }) {
   return (
     <aside className={open ? "cartDrawer cartDrawerOpen" : "cartDrawer"} aria-hidden={!open}>
       <div className="drawerHeader">
@@ -948,10 +1148,10 @@ function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplie
 
       {checkoutStep === 3 ? (
         <div className="checkoutConfirm">
-          <div className="confirmIcon"><Check size={32} strokeWidth={1.5} /></div>
+          <div className="confirmIcon confirmIconSuccess"><Check size={32} strokeWidth={1.5} /></div>
           <h3>Thank You!</h3>
-          <p>Your order is being processed. You'll receive a confirmation email shortly from the Blaquelyś team.</p>
-          <button className="button buttonDark" type="button" onClick={onClose}>CONTINUE SHOPPING</button>
+          <p>Your order is being processed. You'll receive a confirmation from the Blaquelyś team shortly.</p>
+          <button className="button buttonDark shimmerBtn" type="button" onClick={onClose}>CONTINUE SHOPPING</button>
         </div>
       ) : checkoutStep === 2 ? (
         <form className="checkoutForm" onSubmit={onCheckout}>
@@ -959,14 +1159,8 @@ function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplie
           <label>Card Number</label>
           <input placeholder="1234 5678 9012 3456" required pattern=".{16,19}" maxLength={19} />
           <div className="formRow">
-            <div>
-              <label>Expiry</label>
-              <input placeholder="MM / YY" required />
-            </div>
-            <div>
-              <label>CVV</label>
-              <input placeholder="123" required maxLength={4} />
-            </div>
+            <div><label>Expiry</label><input placeholder="MM / YY" required /></div>
+            <div><label>CVV</label><input placeholder="123" required maxLength={4} /></div>
           </div>
           <label>Name on Card</label>
           <input placeholder="Full name" required />
@@ -974,7 +1168,7 @@ function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplie
           {discountAmount > 0 && <div className="orderSummaryLine promoLine"><span>Promo ({promoApplied})</span><span>−${discountAmount.toFixed(2)}</span></div>}
           <div className="orderSummaryLine"><span>Shipping</span><span>{total >= 150 ? "FREE" : "$8.95"}</span></div>
           <div className="orderSummaryLine totalLine"><span>Total</span><span>${(finalTotal + (total >= 150 ? 0 : 8.95)).toFixed(2)}</span></div>
-          <button className="button buttonDark" type="submit" disabled={sending}>{sending ? "Processing…" : "PLACE ORDER"}</button>
+          <button className="button buttonDark shimmerBtn" type="submit" disabled={sending}>{sending ? "Processing…" : "PLACE ORDER"}</button>
           <button className="textLink" type="button" onClick={() => setCheckoutStep(1)} style={{marginTop:8,justifyContent:"center",width:"100%"}}>← Back</button>
         </form>
       ) : checkoutStep === 1 ? (
@@ -993,7 +1187,7 @@ function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplie
             <div><label>State</label><input placeholder="ST" required maxLength={2} /></div>
             <div><label>ZIP</label><input placeholder="12345" required maxLength={10} /></div>
           </div>
-          <button className="button buttonDark" type="submit">CONTINUE TO PAYMENT →</button>
+          <button className="button buttonDark shimmerBtn" type="submit">CONTINUE TO PAYMENT →</button>
           <button className="textLink" type="button" onClick={() => setCheckoutStep(null)} style={{marginTop:8,justifyContent:"center",width:"100%"}}>← Back to Bag</button>
         </form>
       ) : cart.length ? (
@@ -1047,15 +1241,23 @@ function CartDrawer({ open, cart, total, finalTotal, discountAmount, promoApplie
               {discountAmount > 0 && <p className="discountLine"><span>Discount</span><span>−{money(discountAmount)}</span></p>}
               <p className="totalRow"><span>Total</span><strong>{money(finalTotal)}</strong></p>
             </div>
-            <button className="button buttonDark" type="button" onClick={() => setCheckoutStep(1)}>
+            <button className="button buttonDark shimmerBtn" type="button" onClick={() => setCheckoutStep(1)}>
               CHECKOUT →
             </button>
+            <div className="cartTrustRow">
+              <span><Check size={10} strokeWidth={2.5} /> Secure checkout</span>
+              <span><Truck size={10} strokeWidth={1.7} /> Free over $150</span>
+              <span><RefreshCw size={10} strokeWidth={2} /> Easy returns</span>
+            </div>
           </div>
         </>
       ) : (
         <div className="emptyCart">
           <ShoppingBag size={40} strokeWidth={1} />
           <p>Your bag is waiting for something soft.</p>
+          <button className="button buttonDark" type="button" onClick={onClose} style={{marginTop:"24px",fontSize:"9px",padding:"14px 32px"}}>
+            SHOP THE COLLECTION
+          </button>
         </div>
       )}
     </aside>
@@ -1084,6 +1286,7 @@ function WishlistDrawer({ open, items, selectedVariants, onClose, onAdd, onWish,
                 <div>
                   <h3>{product.name}</h3>
                   <p>{variant.label} · {money(product.price)}</p>
+                  <StarRating rating={product.rating} />
                   <div className="wishlistActions">
                     <button className="button buttonDark" type="button" style={{fontSize:"8px",padding:"8px 16px"}} onClick={() => onAdd(product)}>
                       ADD TO BAG
@@ -1100,7 +1303,7 @@ function WishlistDrawer({ open, items, selectedVariants, onClose, onAdd, onWish,
       ) : (
         <div className="emptyCart">
           <Heart size={40} strokeWidth={1} />
-          <p>No saved pieces yet. Heart a product to save it here.</p>
+          <p>No saved pieces yet.<br/>Heart a product to save it.</p>
         </div>
       )}
     </aside>
@@ -1117,14 +1320,17 @@ function ConciergeDrawer({ open, sending, onClose, onSubmit }) {
         </button>
       </div>
       <form className="conciergeForm" onSubmit={onSubmit}>
-        <p>Send Blaquelyś a fit question, event note, or styling request.</p>
+        <div className="conciergeIntro">
+          <Sparkles size={20} strokeWidth={1.5} />
+          <p>Send Blaquelyś a fit question, event note, or styling request. Our team responds within 24 hours.</p>
+        </div>
         <label htmlFor="name">Name</label>
         <input id="name" name="name" placeholder="Your name" required />
         <label htmlFor="contactEmail">Email</label>
         <input id="contactEmail" name="contactEmail" type="email" placeholder="you@example.com" required />
         <label htmlFor="message">Message</label>
         <textarea id="message" name="message" rows="6" placeholder="Tell us what you want styled." required />
-        <button className="button buttonDark" type="submit" disabled={sending}>
+        <button className="button buttonDark shimmerBtn" type="submit" disabled={sending}>
           {sending ? "Sending…" : "Send Message"}
         </button>
       </form>
@@ -1132,7 +1338,7 @@ function ConciergeDrawer({ open, sending, onClose, onSubmit }) {
   );
 }
 
-function QuickView({ product, selectedIndex, onVariant, onAdd, onClose, onSizeGuide }) {
+function QuickView({ product, selectedIndex, onVariant, onAdd, onClose, onSizeGuide, relatedProducts, onRelatedView }) {
   const [size, setSize] = useState(product.sizes[2] || product.sizes[0]);
   const variant = product.variants[selectedIndex];
   return (
@@ -1154,6 +1360,9 @@ function QuickView({ product, selectedIndex, onVariant, onAdd, onClose, onSizeGu
         <div className="quickInfo">
           {product.badge && <span className={`productBadge badge${product.badge.replace(" ","")} quickBadge`}>{product.badge}</span>}
           <h2 id="quickViewTitle">{product.name}</h2>
+          <div className="quickRating">
+            <StarRating rating={product.rating} count={product.reviewCount} />
+          </div>
           <p className="quickPrice">{money(product.price)} · {variant.label}</p>
           <p className="quickDesc">{product.description}</p>
           <div className="quickSwatches">
@@ -1186,9 +1395,23 @@ function QuickView({ product, selectedIndex, onVariant, onAdd, onClose, onSizeGu
               ))}
             </div>
           </div>
-          <button className="button buttonDark" type="button" onClick={() => { onAdd(product, size); onClose(); }}>
+          <button className="button buttonDark shimmerBtn" type="button" onClick={() => { onAdd(product, size); onClose(); }}>
             ADD TO BAG — {money(product.price)}
           </button>
+          {relatedProducts.length > 0 && (
+            <div className="quickRelated">
+              <span className="quickRelatedTitle">COMPLETE THE LOOK</span>
+              <div className="quickRelatedGrid">
+                {relatedProducts.map((rp) => (
+                  <button key={rp.id} type="button" className="quickRelatedItem" onClick={() => onRelatedView(rp)}>
+                    <img src={asset(rp.image)} alt={rp.name} />
+                    <small>{rp.name}</small>
+                    <strong>{money(rp.price)}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </article>
     </div>
